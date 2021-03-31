@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		244F76D725FFD40200690119 /* generateToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244F76D625FFD40200690119 /* generateToken.swift */; };
+		24751B0F260341D40044BAC0 /* getToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24751B0E260341D40044BAC0 /* getToken.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		244F76D625FFD40200690119 /* generateToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = generateToken.swift; sourceTree = "<group>"; };
+		24751B0E260341D40044BAC0 /* getToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getToken.swift; sourceTree = "<group>"; };
 		5E0B2A9A637F32309D597B5F /* Pods_ChatExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* ChatExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -69,12 +73,14 @@
 		607FACD21AFB9204008FA782 /* ChatExample */ = {
 			isa = PBXGroup;
 			children = (
+				244F76D625FFD40200690119 /* generateToken.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				CF34C1591BAFDECD00FC1345 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				24751B0E260341D40044BAC0 /* getToken.swift */,
 			);
 			path = ChatExample;
 			sourceTree = "<group>";
@@ -192,13 +198,17 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ChatExample/Pods-ChatExample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftPhoenixClient/SwiftPhoenixClient.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftPhoenixClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -214,6 +224,8 @@
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				24751B0F260341D40044BAC0 /* getToken.swift in Sources */,
+				244F76D725FFD40200690119 /* generateToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

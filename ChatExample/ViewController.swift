@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  SwiftPhoenixClient
-//
-//  Created by Kyle Oba on 08/25/2015.
-//  Copyright (c) 2015 Kyle Oba. All rights reserved.
-//
-
 import UIKit
 import SwiftPhoenixClient
 
@@ -21,41 +13,53 @@ class ViewController: UIViewController {
   
     @IBOutlet weak var socketButton: UIButton!
     
-    let socket = Socket("ws://localhost:4000/socket/websocket")
-    var topic: String = "rooms:lobby"
+   // var socket = Socket("ws://localhost:4000/socket/websocket")
+    var topic: String = "chat:trialChat"
     var lobbyChannel: Channel!
-    
+    var token: String = ""
+    var socket: Socket!
   
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
-        // To automatically manage retain cycles, use `delegate*(to:)` methods.
+        func getToken(){
+            DispatchQueue.main.async {
+                let tokenReq = tokenRequest()
+                tokenReq.getToken{[weak self] result in
+                    switch result{
+                    case .failure(let error):
+                        print(error)
+                    case .success(let token2):
+                        self?.token = token2
+                        let url = "wss://api.sariska.io/api/v1/messaging/websocket/websocket?token="
+                        self?.socket = Socket(url+token2)
+                        self?.socket.delegateOnOpen(to: (self)!) { (self) in
+                            self.addText("Socket Opened")
+                            self.socketButton.setTitle("Disconnect", for: .normal)
+                        }
+                        self?.socket.delegateOnClose(to: (self)!) { (self) in
+                            self.addText("Socket Closed")
+                            self.socketButton.setTitle("Connect", for: .normal)
+                        }
+                        self?.socket.delegateOnError(to: (self)!) { (self, error) in
+                        
+                            self.addText("Socket Errored: " + error.localizedDescription)
+                        }
+                        self?.socket.logger = { msg in print("LOG:", msg) }
+                    }
+                }
+            }
+        }
+        getToken()
+    // To automatically manage retain cycles, use `delegate*(to:)` methods.
         // If you would prefer to handle them yourself, youcan use the same
         // methods without the `delegate` functions, just be sure you avoid
         // memory leakse with `[weak self]`
-        socket.delegateOnOpen(to: self) { (self) in
-            self.addText("Socket Opened")
-            self.socketButton.setTitle("Disconnect", for: .normal)
-        }
-        
-        socket.delegateOnClose(to: self) { (self) in
-            self.addText("Socket Closed")
-            self.socketButton.setTitle("Connect", for: .normal)
-        }
-
-        socket.delegateOnError(to: self) { (self, error) in
-            self.addText("Socket Errored: " + error.localizedDescription)
-        }
-        
-        socket.logger = { msg in print("LOG:", msg) }
     }
-    
-    
     //----------------------------------------------------------------------
     // MARK: - IBActions
     //----------------------------------------------------------------------
     @IBAction func onSocketButtonPressed(_ sender: Any) {
+        
         if socket.isConnected {
             disconnectAndLeave()
         } else {
@@ -64,16 +68,19 @@ class ViewController: UIViewController {
     }
     
     @IBAction func sendMessage(_ sender: UIButton) {
-        let payload = ["user":userField.text!, "body": messageField.text!]
+        let payload = ["user":userField.text!, "content": messageField.text!]
         
         self.lobbyChannel
-            .push("new:msg", payload: payload)
+            .push("new_message", payload: payload)
             .receive("ok") { (message) in
                 print("success", message)
+                self.addText(message.payload["content"] as! String)
             }
             .receive("error") { (errorMessage) in
                 print("error: ", errorMessage)
         }
+        
+        self.addText(payload["content"]!)
         
         messageField.text = ""
     }
@@ -91,22 +98,17 @@ class ViewController: UIViewController {
     
     private func connectAndJoin() {
         let channel = socket.channel(topic, params: ["status":"joining"])
-        channel.delegateOn("join", to: self) { (self, _) in
+        
+        channel.delegateOn("user_joined", to: self) { (self, _) in
+            self.addText("You are here now.")
             self.addText("You joined the room.")
         }
         
-        channel.delegateOn("new:msg", to: self) { (self, message) in
-            let payload = message.payload
-            guard
-                let username = payload["user"],
-                let body = payload["body"] else { return }
-            let newMessage = "[\(username)] \(body)"
-            self.addText(newMessage)
+        channel.delegateOn("new_message", to: self) { (self, message) in
+
+            self.addText(message.payload["content"] as! String)
         }
         
-        channel.delegateOn("user:entered", to: self) { (self, message) in
-            self.addText("[anonymous entered]")
-        }
         
         self.lobbyChannel = channel
         self.lobbyChannel
