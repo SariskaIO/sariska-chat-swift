@@ -30,7 +30,7 @@ class ViewController: UIViewController {
                         print(error)
                     case .success(let token2):
                         self?.token = token2
-                        let url = "wss://api.sariska.io/api/v1/messaging/websocket/websocket?token="
+                        let url = "wss://api.sariska.io/api/v1/messaging/websocket?token="
                         self?.socket = Socket(url+token2)
                         self?.socket.delegateOnOpen(to: (self)!) { (self) in
                             self.addText("Socket Opened")
